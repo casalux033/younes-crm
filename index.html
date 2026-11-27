@@ -89,6 +89,7 @@ const loginEmail=u.includes('@')?u:`${u}@younes-crm.internal`;const {data,error}
  const {data:pr,error:pe}=await sb.from('crm_profiles').select('*').eq('id',data.user.id).maybeSingle();
  if(pe||!pr||!pr.is_active){await sb.auth.signOut();msg(box,pr?tr('loginError'):tr('profileMissing'),true);return}
  profile=pr;document.getElementById('sideUser').textContent=pr.display_name||pr.username;document.getElementById('avatar').textContent=(pr.display_name||pr.username||'Y').slice(0,1).toUpperCase();
+ document.getElementById('societiesNav').classList.toggle('hidden',pr.role!=='admin');
  document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
  if(pr.must_change_password){passwordModal();return}await renderPage();
 });
