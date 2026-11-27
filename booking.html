@@ -3,14 +3,28 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MS HOUSE BARBER — Réservation</title>
+<meta name="description" content="Réservez votre rendez-vous chez MS HOUSE BARBER. Choisissez vos prestations, votre barbier, la date et l’heure.">
+<link rel="icon" type="image/png" href="./ms-house-barber-logo.png">
+<link rel="apple-touch-icon" href="./ms-house-barber-logo.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="MS HOUSE BARBER — Réservation">
+<meta property="og:description" content="Réservez votre rendez-vous chez MS HOUSE BARBER en quelques clics.">
+<meta property="og:url" content="https://casalux033.github.io/younes-crm/booking.html">
+<meta property="og:image" content="https://casalux033.github.io/younes-crm/ms-house-barber-logo.png">
+<meta property="og:image:alt" content="Logo MS HOUSE BARBER">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MS HOUSE BARBER — Réservation">
+<meta name="twitter:description" content="Réservez votre rendez-vous en quelques clics.">
+<meta name="twitter:image" content="https://casalux033.github.io/younes-crm/ms-house-barber-logo.png">
 <style>
 :root{--bg:#111315;--panel:#1c2024;--ink:#f5f2eb;--muted:#a9adae;--gold:#c7a56b;--line:#343a3f}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#111315,#252a2e);color:var(--ink);font:15px/1.55 system-ui,Arial,sans-serif;min-height:100vh;display:grid;place-items:center;padding:22px}
-main{width:min(680px,100%)}.brand{text-align:center;letter-spacing:.22em;color:var(--gold);font-weight:800;font-size:13px}.sub{text-align:center;color:var(--muted);margin:4px 0 24px}h1{text-align:center;font-size:34px;letter-spacing:.04em;margin:8px 0 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 18px 50px #0005}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:6px;margin:7px 0}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#111518;color:var(--ink);font:inherit} .service-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.service-option{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#111518;color:var(--ink)}.service-option input{width:auto;accent-color:var(--gold)}.service-total{font-weight:800;color:var(--gold);padding:8px 2px}.service-option small{display:block;color:var(--muted)}button{width:100%;margin-top:16px;padding:13px;border:0;border-radius:10px;background:var(--gold);color:#171717;font-weight:800;font-size:15px;cursor:pointer}.hint{color:var(--muted);font-size:12px;margin-top:12px;text-align:center}.notice{padding:12px;border-radius:10px;margin-top:14px;background:#28332d;color:#b9ebce}.error{background:#3a2727;color:#ffc2c2}@media(max-width:560px){.grid{grid-template-columns:1fr}.service-list{grid-template-columns:1fr}.field.full{grid-column:auto}h1{font-size:27px}.card{padding:17px}}
+main{width:min(680px,100%)}.brand{text-align:center;letter-spacing:.22em;color:var(--gold);font-weight:800;font-size:13px}.brand-logo{display:block;width:112px;height:112px;object-fit:contain;margin:0 auto 10px}.sub{text-align:center;color:var(--muted);margin:4px 0 24px}h1{text-align:center;font-size:34px;letter-spacing:.04em;margin:8px 0 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 18px 50px #0005}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:6px;margin:7px 0}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#111518;color:var(--ink);font:inherit} .service-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.service-option{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#111518;color:var(--ink)}.service-option input{width:auto;accent-color:var(--gold)}.service-total{font-weight:800;color:var(--gold);padding:8px 2px}.service-option small{display:block;color:var(--muted)}button{width:100%;margin-top:16px;padding:13px;border:0;border-radius:10px;background:var(--gold);color:#171717;font-weight:800;font-size:15px;cursor:pointer}.hint{color:var(--muted);font-size:12px;margin-top:12px;text-align:center}.notice{padding:12px;border-radius:10px;margin-top:14px;background:#28332d;color:#b9ebce}.error{background:#3a2727;color:#ffc2c2}@media(max-width:560px){.grid{grid-template-columns:1fr}.service-list{grid-template-columns:1fr}.field.full{grid-column:auto}h1{font-size:27px}.card{padding:17px}}
 </style>
 </head>
 <body><main>
-<div class="brand">MS HOUSE</div><h1>BARBER</h1><div class="sub">Réservez votre prochain rendez-vous</div>
+<div class="brand"><img class="brand-logo" src="./ms-house-barber-logo.png" alt="Logo MS HOUSE BARBER">MS HOUSE</div><h1>BARBER</h1><div class="sub">Réservez votre prochain rendez-vous</div>
 <div class="card"><form id="bookingForm"><div class="grid">
 <div class="field full"><label>Nom complet</label><input name="client_name" required maxlength="100" placeholder="Votre nom"></div>
 <div class="field full"><label>Téléphone</label><input name="client_phone" required maxlength="30" placeholder="06XXXXXXXX"></div>
