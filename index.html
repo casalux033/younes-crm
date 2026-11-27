@@ -102,6 +102,14 @@ async function getRows(key){const cfg=tables[key];const {data,error}=await sb.fr
 async function renderPage(){
  const c=document.getElementById('content');document.getElementById('topTitle').textContent=tr(currentPage==='dashboard'?'dashboard':tables[currentPage]?.title||currentPage);
  document.getElementById('today').textContent=new Intl.DateTimeFormat(lang==='ar'?'ar-MA':'fr-FR',{dateStyle:'full'}).format(new Date());
+ if(currentPage==='societies'){
+ if(profile?.role!=='admin'){
+  c.innerHTML='<div class="notice error">Accès réservé à l’administrateur.</div>';
+  return;
+ }
+ await renderSocietiesPage();
+ return;
+}
  if(currentPage==='barber'){await renderBarberPage();return}
  if(currentPage==='orders'){await renderOrdersPage();return}
  if(currentPage==='dashboard'){c.innerHTML=`<div class="page-head"><div><h1>${tr('overview')}</h1><div class="muted">${tr('overviewSub')}</div></div></div><div class="stats" id="stats"><div class="stat">…</div></div><div class="grid2"><div class="panel"><h3>${tr('recentContacts')}</h3><div id="recentContacts" class="muted">${tr('loading')}</div></div><div class="panel"><h3>${tr('recentTasks')}</h3><div id="recentTasks" class="muted">${tr('loading')}</div></div></div>`;
@@ -240,6 +248,53 @@ async function openForm(key,row=null){const cfg=tables[key];let html=`<div class
  if(key==='deals'&&payload.amount)payload.amount=Number(payload.amount);
  const res=row?await sb.from(cfg.table).update(payload).eq('id',row.id):await sb.from(cfg.table).insert(payload);
  if(res.error){msg(document.getElementById('formMsg'),res.error.message,true);return}document.getElementById('modalRoot').innerHTML='';await renderPage();
+                                                          async function renderSocietiesPage(){
+ const c=document.getElementById('content');
+ document.getElementById('topTitle').textContent=tr('societies');
+ c.innerHTML=`
+  <div class="page-head">
+   <div>
+    <h1>${tr('societies')}</h1>
+    <div class="muted">Gestion des espaces de travail</div>
+   </div>
+  </div>
+  <div class="panel" id="societiesArea">Chargement...</div>`;
+
+ const {data,error}=await sb
+  .from('crm_tenants')
+  .select('id,name,slug,website,is_active,created_at')
+  .order('created_at',{ascending:true});
+
+ const area=document.getElementById('societiesArea');
+ if(error){
+  area.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;
+  return;
+ }
+ if(!data?.length){
+  area.innerHTML=`<div class="empty">${tr('noData')}</div>`;
+  return;
+ }
+
+ area.innerHTML=`
+  <div class="table-wrap">
+   <table>
+    <thead><tr>
+     <th>Nom</th><th>Slug</th><th>Site web</th><th>Statut</th>
+    </tr></thead>
+    <tbody>
+     ${data.map(x=>{
+      const url=/^https?:\\/\\//i.test(x.website||'')?x.website:null;
+      return `<tr>
+       <td><b>${esc(x.name)}</b></td>
+       <td>${esc(x.slug)}</td>
+       <td>${url?`<a href="${esc(url)}" target="_blank" rel="noopener">Visiter ↗</a>`:'—'}</td>
+       <td><span class="pill">${x.is_active?'Active':'Inactive'}</span></td>
+      </tr>`;
+     }).join('')}
+    </tbody>
+   </table>
+  </div>`;
+}
  };
 }
 async function removeRow(key,id){if(!confirm(tr('confirmDelete')))return;const {error}=await sb.from(tables[key].table).delete().eq('id',id);if(error){alert(error.message);return}await renderPage()}
