@@ -83,7 +83,7 @@ form.onsubmit=async e=>{
  const {error}=await db.from('crm_barber_appointments').insert({
   tenant_id:TENANT,client_name:String(f.get('client_name')).trim(),client_phone:String(f.get('client_phone')).trim(),
   barber_id:f.get('barber_id'),service_id:selected[0].id,service_ids:selected.map(x=>x.id),starts_at:start.toISOString(),ends_at:end.toISOString(),
-  status:'pending',price:totalPrice,barber_fixed_fee:totalBarber,salon_share:totalPrice-totalBarber,payment_status:'unpaid',paid_to_barber:false,
+  status:'pending',price:totalPrice,barber_fixed_fee:totalBarber,payment_status:'unpaid',paid_to_barber:false,
   notes:appointmentNotes
  });
  if(error){show(error.message.includes('no longer available')?'Ce créneau vient d’être réservé. Choisissez une autre heure.':'La demande n’a pas pu être envoyée. Vérifiez les informations et réessayez.',true);return}
