@@ -59,6 +59,25 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
  </main>
 </div>
 <div id="modalRoot"></div>
+<script>
+window.__crmModuleReady=false;
+window.addEventListener('error',function(e){
+ const box=document.getElementById('loginMsg');
+ if(box){box.textContent='Erreur de chargement CRM : '+(e.message||'JavaScript');box.classList.remove('hidden');box.classList.add('error');}
+});
+window.addEventListener('unhandledrejection',function(e){
+ const box=document.getElementById('loginMsg');
+ if(box){box.textContent='Erreur CRM : '+(e.reason?.message||String(e.reason||'chargement'));box.classList.remove('hidden');box.classList.add('error');}
+});
+document.getElementById('loginForm').addEventListener('submit',function(e){
+ if(!window.__crmModuleReady){
+  e.preventDefault();
+  const box=document.getElementById('loginMsg');
+  box.textContent='Le système CRM ne s’est pas chargé. Vérifiez la connexion Internet puis actualisez la page (Ctrl + Shift + R).';
+  box.classList.remove('hidden');box.classList.add('error');
+ }
+},true);
+</script>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.119.2';
 const SUPABASE_URL='https://axmtmljpdwmpsclxzldt.supabase.co';
@@ -317,5 +336,6 @@ async function renderSocietiesPage(){
   </div>`;
 }
 async function removeRow(key,id){if(!confirm(tr('confirmDelete')))return;const {error}=await sb.from(tables[key].table).delete().eq('id',id);if(error){alert(error.message);return}await renderPage()}
+window.__crmModuleReady=true;
 </script>
 </body></html>
