@@ -248,7 +248,10 @@ async function openForm(key,row=null){const cfg=tables[key];let html=`<div class
  if(key==='deals'&&payload.amount)payload.amount=Number(payload.amount);
  const res=row?await sb.from(cfg.table).update(payload).eq('id',row.id):await sb.from(cfg.table).insert(payload);
  if(res.error){msg(document.getElementById('formMsg'),res.error.message,true);return}document.getElementById('modalRoot').innerHTML='';await renderPage();
-                                                          async function renderSocietiesPage(){
+                                                          
+ };
+}
+async function renderSocietiesPage(){
  const c=document.getElementById('content');
  document.getElementById('topTitle').textContent=tr('societies');
  c.innerHTML=`
@@ -294,8 +297,6 @@ async function openForm(key,row=null){const cfg=tables[key];let html=`<div class
     </tbody>
    </table>
   </div>`;
-}
- };
 }
 async function removeRow(key,id){if(!confirm(tr('confirmDelete')))return;const {error}=await sb.from(tables[key].table).delete().eq('id',id);if(error){alert(error.message);return}await renderPage()}
 </script>
