@@ -6,7 +6,7 @@
 <style>
 :root{--bg:#111315;--panel:#1c2024;--ink:#f5f2eb;--muted:#a9adae;--gold:#c7a56b;--line:#343a3f}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#111315,#252a2e);color:var(--ink);font:15px/1.55 system-ui,Arial,sans-serif;min-height:100vh;display:grid;place-items:center;padding:22px}
-main{width:min(680px,100%)}.brand{text-align:center;letter-spacing:.22em;color:var(--gold);font-weight:800;font-size:13px}.sub{text-align:center;color:var(--muted);margin:4px 0 24px}h1{text-align:center;font-size:34px;letter-spacing:.04em;margin:8px 0 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 18px 50px #0005}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:6px;margin:7px 0}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#111518;color:var(--ink);font:inherit}button{width:100%;margin-top:16px;padding:13px;border:0;border-radius:10px;background:var(--gold);color:#171717;font-weight:800;font-size:15px;cursor:pointer}.hint{color:var(--muted);font-size:12px;margin-top:12px;text-align:center}.notice{padding:12px;border-radius:10px;margin-top:14px;background:#28332d;color:#b9ebce}.error{background:#3a2727;color:#ffc2c2}@media(max-width:560px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}h1{font-size:27px}.card{padding:17px}}
+main{width:min(680px,100%)}.brand{text-align:center;letter-spacing:.22em;color:var(--gold);font-weight:800;font-size:13px}.sub{text-align:center;color:var(--muted);margin:4px 0 24px}h1{text-align:center;font-size:34px;letter-spacing:.04em;margin:8px 0 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 18px 50px #0005}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:6px;margin:7px 0}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#111518;color:var(--ink);font:inherit} .service-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.service-option{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#111518;color:var(--ink)}.service-option input{width:auto;accent-color:var(--gold)}.service-total{font-weight:800;color:var(--gold);padding:8px 2px}.service-option small{display:block;color:var(--muted)}button{width:100%;margin-top:16px;padding:13px;border:0;border-radius:10px;background:var(--gold);color:#171717;font-weight:800;font-size:15px;cursor:pointer}.hint{color:var(--muted);font-size:12px;margin-top:12px;text-align:center}.notice{padding:12px;border-radius:10px;margin-top:14px;background:#28332d;color:#b9ebce}.error{background:#3a2727;color:#ffc2c2}@media(max-width:560px){.grid{grid-template-columns:1fr}.service-list{grid-template-columns:1fr}.field.full{grid-column:auto}h1{font-size:27px}.card{padding:17px}}
 </style>
 </head>
 <body><main>
@@ -14,7 +14,7 @@ main{width:min(680px,100%)}.brand{text-align:center;letter-spacing:.22em;color:v
 <div class="card"><form id="bookingForm"><div class="grid">
 <div class="field full"><label>Nom complet</label><input name="client_name" required maxlength="100" placeholder="Votre nom"></div>
 <div class="field full"><label>Téléphone</label><input name="client_phone" required maxlength="30" placeholder="06XXXXXXXX"></div>
-<div class="field"><label>Service</label><select name="service_id" id="service" required><option value="">Chargement…</option></select></div>
+<div class="field full"><label>Services (choisissez une ou plusieurs prestations)</label><div id="services" class="service-list">Chargement…</div><div id="serviceTotal" class="service-total">Total : —</div></div>
 <div class="field"><label>Barbier</label><select name="barber_id" id="barber" required><option value="">Chargement…</option></select></div>
 <div class="field"><label>Date souhaitée</label><input name="date" id="date" type="date" required></div>
 <div class="field"><label>Heure souhaitée</label><input name="time" type="time" required></div>
@@ -32,6 +32,12 @@ const form=document.getElementById('bookingForm'),msg=document.getElementById('m
 const date=document.getElementById('date');date.min=new Date().toISOString().slice(0,10);
 let services=[],barbers=[];
 function show(text,error=false){msg.hidden=false;msg.textContent=text;msg.className='notice'+(error?' error':'')}
+function updateServiceTotal(){
+ const chosen=services.filter(x=>document.querySelector('input[name="service_ids"][value="'+x.id+'"]')?.checked);
+ const total=chosen.reduce((n,x)=>n+Number(x.price||0),0);
+ const duration=chosen.reduce((n,x)=>n+Number(x.duration_minutes||0),0);
+ document.getElementById('serviceTotal').textContent=chosen.length?'Total : '+total.toFixed(2)+' DH · Durée estimée : '+duration+' min':'Total : —';
+}
 async function init(){
  const [s,b]=await Promise.all([
   db.from('crm_barber_services').select('id,name,duration_minutes,price,barber_fixed_fee').eq('tenant_id',TENANT).eq('is_active',true).order('name'),
@@ -39,22 +45,30 @@ async function init(){
  ]);
  if(s.error||b.error){show('Impossible de charger les disponibilités. Réessayez plus tard.',true);return}
  services=s.data||[];barbers=b.data||[];
- document.getElementById('service').innerHTML='<option value="">Choisir un service</option>'+services.map(x=>`<option value="${x.id}">${x.name} — ${Number(x.price).toFixed(2)} DH (${x.duration_minutes} min)</option>`).join('');
+ document.getElementById('services').innerHTML=services.map(x=>`<label class="service-option"><input type="checkbox" name="service_ids" value="${x.id}"><span><b>${x.name}</b><small>${Number(x.price).toFixed(2)} DH · ${x.duration_minutes} min</small></span></label>`).join('');
+ document.querySelectorAll('input[name="service_ids"]').forEach(el=>el.addEventListener('change',updateServiceTotal));
+ updateServiceTotal();
  document.getElementById('barber').innerHTML='<option value="">Choisir un barbier</option>'+barbers.map(x=>`<option value="${x.id}">${x.full_name}</option>`).join('');
  if(!services.length||!barbers.length)show('Les réservations en ligne seront disponibles dès que le salon aura ajouté ses services et ses barbiers.',true);
 }
 form.onsubmit=async e=>{
  e.preventDefault();msg.hidden=true;
- const f=new FormData(form),service=services.find(x=>x.id===f.get('service_id'));
- if(!service){show('Choisissez un service.',true);return}
+ const f=new FormData(form),selectedIds=f.getAll('service_ids'),selected=services.filter(x=>selectedIds.includes(x.id));
+ if(!selected.length){show('Choisissez au moins un service.',true);return}
+ const totalPrice=selected.reduce((n,x)=>n+Number(x.price||0),0);
+ const totalBarber=selected.reduce((n,x)=>n+Number(x.barber_fixed_fee||0),0);
+ const totalDuration=selected.reduce((n,x)=>n+Number(x.duration_minutes||0),0);
  const start=new Date(`${f.get('date')}T${f.get('time')}`);
  if(Number.isNaN(start.getTime())||start<=new Date()){show('Choisissez une date et une heure dans le futur.',true);return}
- const end=new Date(start.getTime()+service.duration_minutes*60000);
+ const end=new Date(start.getTime()+totalDuration*60000);
+ const serviceNames=selected.map(x=>x.name).join(' + ');
+ const userNotes=String(f.get('notes')||'').trim();
+ const appointmentNotes='Services: '+serviceNames+(userNotes?'\\n'+userNotes:'');
  const {error}=await db.from('crm_barber_appointments').insert({
   tenant_id:TENANT,client_name:String(f.get('client_name')).trim(),client_phone:String(f.get('client_phone')).trim(),
-  barber_id:f.get('barber_id'),service_id:service.id,starts_at:start.toISOString(),ends_at:end.toISOString(),
-  status:'pending',price:service.price,barber_fixed_fee:service.barber_fixed_fee,payment_status:'unpaid',paid_to_barber:false,
-  notes:String(f.get('notes')||'').trim()||null
+  barber_id:f.get('barber_id'),service_id:selected[0].id,starts_at:start.toISOString(),ends_at:end.toISOString(),
+  status:'pending',price:totalPrice,barber_fixed_fee:totalBarber,salon_share:totalPrice-totalBarber,payment_status:'unpaid',paid_to_barber:false,
+  notes:appointmentNotes
  });
  if(error){show(error.message.includes('no longer available')?'Ce créneau vient d’être réservé. Choisissez une autre heure.':'La demande n’a pas pu être envoyée. Vérifiez les informations et réessayez.',true);return}
  form.reset();show('Votre demande a été envoyée. Le salon vous contactera pour confirmer le rendez-vous.');
