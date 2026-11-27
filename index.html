@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YOUNES CRM</title>
+<meta name="theme-color" content="#f7f8fa">
+<style>
+:root{--bg:#f6f7f9;--panel:#fff;--ink:#17202c;--muted:#788391;--line:#e7ebf0;--accent:#24364b;--accent2:#edf2f7;--green:#16845b;--red:#c44949;--shadow:0 8px 30px rgba(20,35,55,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:12px}
+#login{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#f7f8fa,#edf1f5)}
+.login-card{width:min(420px,100%);background:white;border:1px solid var(--line);border-radius:20px;padding:34px;box-shadow:var(--shadow)}
+.brand{font-weight:800;letter-spacing:.16em;font-size:18px}.brand span{display:inline-grid;place-items:center;background:#24364b;color:white;border-radius:10px;width:34px;height:34px;margin-right:10px;letter-spacing:0}
+.login-card h1{font-size:25px;margin:26px 0 4px}.field{display:grid;gap:6px;margin:14px 0}.field label{font-size:12px;color:#657181;font-weight:650}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:white;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#8093a8;box-shadow:0 0 0 3px #eaf0f6}
+.btn{border:0;border-radius:10px;padding:10px 15px;background:var(--accent);color:white;font-weight:650}.btn.secondary{background:#eef1f5;color:#263447}.btn.danger{background:#fff0f0;color:var(--red)}.btn:disabled{opacity:.5;cursor:not-allowed}
+#app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.sidebar{background:#fff;border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;gap:26px}.sidebar .brand{padding:2px 10px 12px}.nav-label{padding:0 12px;color:#9aa3ae;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;text-align:left;color:#667281;padding:11px 12px;border-radius:10px;display:flex;align-items:center;gap:12px}.nav button.active,.nav button:hover{background:#edf1f5;color:#1c2d41;font-weight:700}.nav .ico{width:20px;text-align:center;font-size:16px}.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:16px 10px 0}
+.main{min-width:0}.topbar{height:74px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:2}.top-actions{display:flex;gap:10px;align-items:center}.avatar{width:34px;height:34px;border-radius:50%;background:#e9eef4;display:grid;place-items:center;font-weight:800;color:#34465b}
+.content{padding:30px 32px;max-width:1500px;margin:auto}.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}.page-head h1{font-size:25px;margin:0 0 5px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}.stat,.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 2px 10px rgba(20,35,55,.025)}.stat .label{color:var(--muted);font-size:12px}.stat .value{font-size:27px;font-weight:800;margin-top:8px}.panel h3{font-size:15px;margin:0 0 15px}.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}th{text-align:left;color:#8a95a2;font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:750;padding:11px 12px;border-bottom:1px solid var(--line)}td{padding:13px 12px;border-bottom:1px solid #f0f2f5}tbody tr:last-child td{border-bottom:0}.pill{display:inline-block;border-radius:99px;padding:4px 9px;background:#eef2f6;color:#526174;font-size:11px;font-weight:700}.pill.good{background:#e8f6ef;color:#16764f}.pill.warn{background:#fff5e5;color:#986519}.empty{text-align:center;padding:35px;color:#98a1ac}.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px}.search{max-width:320px;flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:white}
+.modal-back{position:fixed;inset:0;background:#17202c66;display:grid;place-items:center;padding:18px;z-index:5}.modal{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:22px;box-shadow:var(--shadow)}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0;font-size:18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.form-grid .wide{grid-column:1/-1}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.notice{padding:11px 13px;border-radius:10px;background:#f0f4f8;color:#526174;margin:12px 0}.error{background:#fff0f0;color:#a83232}.rtl{direction:rtl}.rtl .sidebar{border-right:0;border-left:1px solid var(--line)}.rtl .nav button{text-align:right}.rtl th,.rtl td{text-align:right}
+@media(max-width:900px){#app{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:3;padding:10px 12px;gap:8px;border-right:0;border-bottom:1px solid var(--line)}.sidebar .brand{padding:0 5px}.nav-label,.sidebar-bottom{display:none}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;padding:9px}.topbar{height:60px;padding:0 16px}.content{padding:22px 16px}.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:520px){.stats{gap:9px}.stat{padding:13px}.stat .value{font-size:22px}.page-head{align-items:center}.page-head h1{font-size:21px}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.login-card{padding:25px}}
+</style>
+</head>
+<body>
+<section id="login">
+ <div class="login-card">
+  <div class="brand"><span>Y</span> YOUNES CRM</div>
+  <h1 data-i18n="welcome">Bienvenue</h1><p class="muted" data-i18n="loginSub">Connectez-vous à votre espace de travail</p>
+  <form id="loginForm">
+   <div class="field"><label data-i18n="username">Nom d’utilisateur</label><input id="username" autocomplete="username" required placeholder="admin"></div>
+   <div class="field"><label data-i18n="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required></div>
+   <button class="btn" style="width:100%;margin-top:10px" data-i18n="signIn">Se connecter</button>
+   <div id="loginMsg" class="notice hidden"></div>
+  </form>
+  <div style="display:flex;justify-content:flex-end;margin-top:18px"><button class="btn secondary" id="loginLang">العربية / FR</button></div>
+ </div>
+</section>
+<div id="app" class="hidden">
+ <aside class="sidebar">
+  <div class="brand"><span>Y</span> YOUNES CRM</div>
+  <div class="nav-label" data-i18n="workspace">Espace de travail</div>
+  <nav class="nav" id="nav">
+   <button data-page="dashboard" class="active"><span class="ico">▦</span><span data-i18n="dashboard">Dashboard</span></button>
+   <button data-page="contacts"><span class="ico">♙</span><span data-i18n="contacts">Contacts</span></button>
+   <button data-page="companies"><span class="ico">▤</span><span data-i18n="companies">Entreprises</span></button>
+   <button data-page="deals"><span class="ico">◇</span><span data-i18n="deals">Opportunités</span></button>
+   <button data-page="tasks"><span class="ico">✓</span><span data-i18n="tasks">Tâches</span></button>
+   <button data-page="notes"><span class="ico">▧</span><span data-i18n="notes">Notes</span></button>
+   <button data-page="orders"><span class="ico">🧾</span><span data-i18n="orders">Commandes HERMANO</span></button>
+   <button data-page="barber"><span class="ico">✂</span><span data-i18n="barber">MS HOUSE BARBER</span></button>
+  </nav>
+  <div class="sidebar-bottom"><div class="small muted" data-i18n="connectedAs">Connecté en tant que</div><strong id="sideUser">Admin</strong></div>
+ </aside>
+ <main class="main">
+  <header class="topbar"><div><strong id="topTitle">Dashboard</strong><div class="small muted" id="today"></div></div><div class="top-actions"><button class="btn secondary" id="langToggle">العربية / FR</button><div class="avatar" id="avatar">A</div><button class="btn secondary" id="logout" data-i18n="logout">Déconnexion</button></div></header>
+  <section class="content" id="content"></section>
+ </main>
+</div>
+<div id="modalRoot"></div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.119.2';
+const SUPABASE_URL='https://axmtmljpdwmpsclxzldt.supabase.co';
+const SUPABASE_KEY='sb_publishable_rRuLAXqxjOvrbLrkqws74A_2RtFBvBR';
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+let lang='fr', profile=null, currentPage='dashboard', cache={};
+const T={
+ fr:{welcome:'Bienvenue',loginSub:'Connectez-vous à votre espace de travail',username:"Nom d’utilisateur",password:'Mot de passe',signIn:'Se connecter',workspace:'Espace de travail',dashboard:'Dashboard',contacts:'Contacts',companies:'Entreprises',deals:'Opportunités',tasks:'Tâches',notes:'Notes',barber:'MS HOUSE BARBER',orders:'Commandes HERMANO',connectedAs:'Connecté en tant que',logout:'Déconnexion',overview:'Vue d’ensemble',overviewSub:'Voici un aperçu de votre activité.',totalContacts:'Contacts',totalCompanies:'Entreprises',openDeals:'Opportunités ouvertes',pendingTasks:'Tâches à faire',recentContacts:'Contacts récents',recentTasks:'Tâches à venir',add:'Ajouter',search:'Rechercher...',name:'Nom',email:'E-mail',phone:'Téléphone',company:'Entreprise',status:'Statut',title:'Titre',amount:'Montant',stage:'Étape',priority:'Priorité',due:'Échéance',actions:'Actions',noData:'Aucune donnée pour le moment.',save:'Enregistrer',cancel:'Annuler',edit:'Modifier',delete:'Supprimer',confirmDelete:'Supprimer cet élément ?',firstName:'Prénom',lastName:'Nom',jobTitle:'Poste',industry:'Secteur',website:'Site web',address:'Adresse',city:'Ville',country:'Pays',description:'Description',source:'Source',expectedClose:'Date de clôture prévue',todo:'À faire',inProgress:'En cours',done:'Terminée',new:'Nouveau',qualified:'Qualifiée',proposal:'Proposition',negotiation:'Négociation',won:'Gagnée',lost:'Perdue',low:'Basse',normal:'Normale',high:'Haute',urgent:'Urgente',body:'Contenu',selectContact:'Contact lié',selectCompany:'Entreprise liée',selectDeal:'Opportunité liée',loginError:'Identifiants incorrects ou compte inactif.',profileMissing:'Profil CRM introuvable. Contactez votre administrateur.',changeRequired:'Vous devez changer votre mot de passe avant de continuer.',newPassword:'Nouveau mot de passe',repeatPassword:'Confirmer le mot de passe',changePassword:'Changer le mot de passe',passwordMismatch:'Les mots de passe ne correspondent pas.',passwordChanged:'Mot de passe modifié.',loading:'Chargement...',failed:'Une erreur est survenue.',admin:'Administrateur',lead:'Lead',prospect:'Prospect',customer:'Client',inactive:'Inactif',noTitle:'Sans titre'},
+ ar:{welcome:'مرحبا بك',loginSub:'سجّل الدخول إلى مساحة العمل ديالك',username:'اسم المستخدم',password:'كلمة المرور',signIn:'تسجيل الدخول',workspace:'مساحة العمل',dashboard:'الرئيسية',contacts:'جهات الاتصال',companies:'الشركات',deals:'الصفقات',tasks:'المهام',notes:'الملاحظات',barber:'MS HOUSE BARBER',orders:'Commandes HERMANO',connectedAs:'متصل باسم',logout:'تسجيل الخروج',overview:'نظرة عامة',overviewSub:'ها ملخص النشاط ديالك.',totalContacts:'جهات الاتصال',totalCompanies:'الشركات',openDeals:'الصفقات المفتوحة',pendingTasks:'المهام المتبقية',recentContacts:'آخر جهات الاتصال',recentTasks:'المهام القادمة',add:'إضافة',search:'بحث...',name:'الاسم',email:'البريد الإلكتروني',phone:'الهاتف',company:'الشركة',status:'الحالة',title:'العنوان',amount:'المبلغ',stage:'المرحلة',priority:'الأولوية',due:'تاريخ الاستحقاق',actions:'الإجراءات',noData:'لا توجد بيانات حالياً.',save:'حفظ',cancel:'إلغاء',edit:'تعديل',delete:'حذف',confirmDelete:'واش متأكد بغيتي تحذف هاد العنصر؟',firstName:'الاسم الشخصي',lastName:'النسب',jobTitle:'الوظيفة',industry:'المجال',website:'الموقع الإلكتروني',address:'العنوان',city:'المدينة',country:'البلد',description:'الوصف',source:'المصدر',expectedClose:'تاريخ الإغلاق المتوقع',todo:'للقيام بها',inProgress:'قيد الإنجاز',done:'مكتملة',new:'جديدة',qualified:'مؤهلة',proposal:'عرض',negotiation:'تفاوض',won:'رابحة',lost:'خاسرة',low:'منخفضة',normal:'عادية',high:'مرتفعة',urgent:'مستعجلة',body:'المحتوى',selectContact:'جهة الاتصال',selectCompany:'الشركة المرتبطة',selectDeal:'الصفقة المرتبطة',loginError:'معلومات الدخول غير صحيحة أو الحساب غير نشط.',profileMissing:'ملف CRM غير موجود. تواصل مع المسؤول.',changeRequired:'خاصك تبدل كلمة المرور قبل المتابعة.',newPassword:'كلمة المرور الجديدة',repeatPassword:'تأكيد كلمة المرور',changePassword:'تغيير كلمة المرور',passwordMismatch:'كلمتا المرور غير متطابقتين.',passwordChanged:'تم تغيير كلمة المرور.',loading:'جاري التحميل...',failed:'وقع خطأ.',admin:'مسؤول',lead:'مهتم',prospect:'عميل محتمل',customer:'زبون',inactive:'غير نشط',noTitle:'بدون عنوان'}
+};
+const tr=k=>T[lang][k]||k;
+const tables={
+ contacts:{table:'crm_contacts',title:'contacts',fields:[['first_name','firstName'],['last_name','lastName'],['email','email','email'],['phone','phone'],['job_title','jobTitle'],['company_id','selectCompany','select','crm_companies'],['source','source'],['status','status','select', ['lead','prospect','customer','inactive']],['address','address'],['city','city'],['country','country'],['notes','body','textarea']]},
+ companies:{table:'crm_companies',title:'companies',fields:[['name','name'],['industry','industry'],['website','website'],['phone','phone'],['email','email','email'],['address','address'],['city','city'],['country','country'],['description','description','textarea']]},
+ deals:{table:'crm_deals',title:'deals',fields:[['title','title'],['company_id','selectCompany','select','crm_companies'],['contact_id','selectContact','select','crm_contacts'],['amount','amount','number'],['currency','currency'],['stage','stage','select',['new','qualified','proposal','negotiation','won','lost']],['expected_close_date','expectedClose','date'],['description','description','textarea']]},
+ tasks:{table:'crm_tasks',title:'tasks',fields:[['title','title'],['description','description','textarea'],['due_at','due','datetime-local'],['status','status','select',['todo','in_progress','done','cancelled']],['priority','priority','select',['low','normal','high','urgent']],['contact_id','selectContact','select','crm_contacts'],['company_id','selectCompany','select','crm_companies'],['deal_id','selectDeal','select','crm_deals']]},
+ notes:{table:'crm_notes',title:'notes',fields:[['body','body','textarea'],['contact_id','selectContact','select','crm_contacts'],['company_id','selectCompany','select','crm_companies'],['deal_id','selectDeal','select','crm_deals']]}
+};
+function setLang(v){lang=v;document.documentElement.lang=v;document.documentElement.dir=v==='ar'?'rtl':'ltr';document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=tr(el.dataset.i18n));if(!document.getElementById('app').classList.contains('hidden'))renderPage(); }
+document.getElementById('loginLang').onclick=()=>setLang(lang==='fr'?'ar':'fr');
+document.getElementById('langToggle').onclick=()=>setLang(lang==='fr'?'ar':'fr');
+function msg(el,text,isErr=false){el.textContent=text;el.classList.remove('hidden','error');if(isErr)el.classList.add('error')}
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();const u=document.getElementById('username').value.trim().toLowerCase(),p=document.getElementById('password').value;const box=document.getElementById('loginMsg');box.classList.add('hidden');
+ if(!u||!p)return;
+ const {data,error}=await sb.auth.signInWithPassword({email:`${u}@younes-crm.internal`,password:p});
+ if(error){msg(box,tr('loginError'),true);return}
+ const {data:pr,error:pe}=await sb.from('crm_profiles').select('*').eq('id',data.user.id).maybeSingle();
+ if(pe||!pr||!pr.is_active){await sb.auth.signOut();msg(box,pr?tr('loginError'):tr('profileMissing'),true);return}
+ profile=pr;document.getElementById('sideUser').textContent=pr.display_name||pr.username;document.getElementById('avatar').textContent=(pr.display_name||pr.username||'Y').slice(0,1).toUpperCase();
+ document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
+ if(pr.must_change_password){passwordModal();return}await renderPage();
+});
+document.getElementById('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};
+document.getElementById('nav').addEventListener('click',e=>{const b=e.target.closest('button[data-page]');if(!b)return;currentPage=b.dataset.page;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));renderPage()});
+function passwordModal(){document.getElementById('modalRoot').innerHTML=`<div class="modal-back"><div class="modal"><h2>${tr('changeRequired')}</h2><form id="pwForm"><div class="field"><label>${tr('newPassword')}</label><input id="pw1" type="password" minlength="8" required></div><div class="field"><label>${tr('repeatPassword')}</label><input id="pw2" type="password" minlength="8" required></div><div id="pwMsg" class="notice hidden"></div><div class="actions"><button class="btn">${tr('changePassword')}</button></div></form></div></div>`;
+ document.getElementById('pwForm').onsubmit=async e=>{e.preventDefault();const a=document.getElementById('pw1').value,b=document.getElementById('pw2').value,box=document.getElementById('pwMsg');if(a!==b){msg(box,tr('passwordMismatch'),true);return}const {error:authError}=await sb.auth.updateUser({password:a});if(authError){msg(box,authError.message,true);return}const {error:profileError}=await sb.from('crm_profiles').update({must_change_password:false}).eq('id',profile.id);if(profileError){msg(box,'Password changed. Please contact admin to finish first-login setup: '+profileError.message,true);return}document.getElementById('modalRoot').innerHTML='';profile.must_change_password=false;await renderPage()};
+}
+async function getRows(key){const cfg=tables[key];const {data,error}=await sb.from(cfg.table).select('*').order('created_at',{ascending:false}).limit(200);if(error)throw error;cache[key]=data||[];return cache[key]}
+async function renderPage(){
+ const c=document.getElementById('content');document.getElementById('topTitle').textContent=tr(currentPage==='dashboard'?'dashboard':tables[currentPage]?.title||currentPage);
+ document.getElementById('today').textContent=new Intl.DateTimeFormat(lang==='ar'?'ar-MA':'fr-FR',{dateStyle:'full'}).format(new Date());
+ if(currentPage==='barber'){await renderBarberPage();return}
+ if(currentPage==='orders'){await renderOrdersPage();return}
+ if(currentPage==='dashboard'){c.innerHTML=`<div class="page-head"><div><h1>${tr('overview')}</h1><div class="muted">${tr('overviewSub')}</div></div></div><div class="stats" id="stats"><div class="stat">…</div></div><div class="grid2"><div class="panel"><h3>${tr('recentContacts')}</h3><div id="recentContacts" class="muted">${tr('loading')}</div></div><div class="panel"><h3>${tr('recentTasks')}</h3><div id="recentTasks" class="muted">${tr('loading')}</div></div></div>`;
+ try{const [a,b,d,t]=await Promise.all(['crm_contacts','crm_companies','crm_deals','crm_tasks'].map(x=>sb.from(x).select('*',{count:'exact',head:true})));const counts=[a.count||0,b.count||0,d.count||0,t.count||0];document.getElementById('stats').innerHTML=[['totalContacts',counts[0]],['totalCompanies',counts[1]],['openDeals',counts[2]],['pendingTasks',counts[3]]].map(([k,v])=>`<div class="stat"><div class="label">${tr(k)}</div><div class="value">${v}</div></div>`).join('');
+ const [cs,ts]=await Promise.all([sb.from('crm_contacts').select('first_name,last_name,email').order('created_at',{ascending:false}).limit(5),sb.from('crm_tasks').select('title,status,due_at').order('due_at',{ascending:true}).limit(5)]);
+ document.getElementById('recentContacts').innerHTML=cs.data?.length?`<div class="table-wrap"><table><tbody>${cs.data.map(x=>`<tr><td><b>${esc((x.first_name||'')+' '+(x.last_name||''))}</b><div class="small muted">${esc(x.email||'')}</div></td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">${tr('noData')}</div>`;
+ document.getElementById('recentTasks').innerHTML=ts.data?.length?`<table><tbody>${ts.data.map(x=>`<tr><td>${esc(x.title)}</td><td><span class="pill">${tr(x.status)}</span></td></tr>`).join('')}</tbody></table>`:`<div class="empty">${tr('noData')}</div>`;
+ }catch(e){console.error(e);c.insertAdjacentHTML('beforeend',`<div class="notice error">${tr('failed')}: ${esc(e.message)}</div>`)}return}
+ const cfg=tables[currentPage];if(!cfg)return;c.innerHTML=`<div class="page-head"><div><h1>${tr(cfg.title)}</h1><div class="muted">${tr('overviewSub')}</div></div><button class="btn" id="addBtn">＋ ${tr('add')}</button></div><div class="panel"><div class="toolbar"><input class="search" id="search" placeholder="${tr('search')}"></div><div id="tableArea" class="table-wrap">${tr('loading')}</div></div>`;
+ document.getElementById('addBtn').onclick=()=>openForm(currentPage);
+ try{const rows=await getRows(currentPage);drawTable(currentPage,rows);document.getElementById('search').oninput=e=>drawTable(currentPage,rows.filter(r=>JSON.stringify(r).toLowerCase().includes(e.target.value.toLowerCase())))}catch(e){document.getElementById('tableArea').innerHTML=`<div class="notice error">${esc(e.message)}</div>`}
+}
+
+
+async function renderOrdersPage(){
+ const c=document.getElementById('content');document.getElementById('topTitle').textContent='Commandes HERMANO';
+ c.innerHTML=`<div class="page-head"><div><h1>Commandes HERMANO</h1><div class="muted">Commandes reçues depuis le site HERMANO</div></div><button class="btn" id="syncOrders">↻ Synchroniser</button></div><div class="panel"><div id="ordersMsg" class="notice hidden"></div><div id="ordersArea">Chargement…</div></div>`;
+ document.getElementById('syncOrders').onclick=async()=>{
+  const b=document.getElementById('syncOrders');b.disabled=true;b.textContent='Synchronisation…';
+  const {data,error}=await sb.functions.invoke('crm-hermano-sync',{body:{action:'sync'}});
+  b.disabled=false;b.textContent='↻ Synchroniser';
+  if(error){msg(document.getElementById('ordersMsg'),'Erreur de synchronisation : '+error.message,true);return}
+  msg(document.getElementById('ordersMsg'),`Synchronisation terminée. ${data?.synced_count??data?.count??'Les données'} mises à jour.`);
+  await loadOrders();
+ };
+ await loadOrders();
+}
+async function loadOrders(){
+ const area=document.getElementById('ordersArea');if(!area)return;area.textContent='Chargement…';
+ const {data,error}=await sb.from('crm_external_orders').select('*').eq('source','hermano').order('created_at_source',{ascending:false}).limit(500);
+ if(error){area.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;return}
+ if(!data?.length){area.innerHTML='<div class="empty">Aucune commande importée. Cliquez sur Synchroniser pour récupérer les commandes HERMANO.</div>';return}
+ area.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Téléphone</th><th>Type</th><th>Total</th><th>Articles</th><th>Statut</th></tr></thead><tbody>${data.map(o=>`<tr><td>${o.created_at_source?new Date(o.created_at_source).toLocaleString():'—'}</td><td><b>${esc(o.customer_name||'—')}</b><div class="small muted">${esc(o.delivery_address||o.delivery_zone||'')}</div></td><td>${esc(o.customer_phone||'—')}</td><td>${esc(o.order_type||'—')}</td><td>${Number(o.total||0).toFixed(2)} DH</td><td>${Array.isArray(o.items)?o.items.map(i=>`${esc(i.product_name||i.name||'Article')} × ${esc(i.quantity||1)}`).join('<br>'):'—'}</td><td><select data-order-status="${o.external_order_id}">${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'].map(v=>`<option value="${v}" ${o.status===v?'selected':''}>${v}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table></div>`;
+ area.querySelectorAll('[data-order-status]').forEach(el=>el.onchange=async()=>{
+  const {error}=await sb.functions.invoke('crm-hermano-sync',{body:{action:'update_status',external_order_id:el.dataset.orderStatus,status:el.value}});
+  if(error){alert('La mise à jour a échoué : '+error.message);await loadOrders();return}
+  msg(document.getElementById('ordersMsg'),'Statut de commande mis à jour.');
+ });
+}
+
+let barberTab='appointments', barberTenantId=null, barberCache={barbers:[],services:[],appointments:[]};
+async function getBarberTenant(){
+ if(barberTenantId)return barberTenantId;
+ const {data,error}=await sb.from('crm_tenants').select('id').eq('slug','ms-house-barber').single();
+ if(error)throw error;barberTenantId=data.id;return barberTenantId;
+}
+async function renderBarberPage(){
+ const c=document.getElementById('content');
+ document.getElementById('topTitle').textContent='MS HOUSE BARBER';
+ c.innerHTML=`<div class="page-head"><div><h1>MS HOUSE BARBER</h1><div class="muted">Gestion du salon · Barbiers · Services · Rendez-vous</div></div><a class="btn secondary" href="./booking.html" target="_blank" rel="noopener">Page de réservation ↗</a></div>
+ <div class="stats" id="barberStats"><div class="stat">Chargement…</div></div>
+ <div class="panel"><div class="toolbar" style="flex-wrap:wrap">
+ <button class="btn ${barberTab==='appointments'?'':'secondary'}" data-btab="appointments">Rendez-vous</button>
+ <button class="btn ${barberTab==='barbers'?'':'secondary'}" data-btab="barbers">Barbiers</button>
+ <button class="btn ${barberTab==='services'?'':'secondary'}" data-btab="services">Services & tarifs</button>
+ <button class="btn" id="barberAdd">＋ Ajouter</button>
+ </div><div id="barberArea">Chargement…</div></div>`;
+ c.querySelectorAll('[data-btab]').forEach(b=>b.onclick=()=>{barberTab=b.dataset.btab;renderBarberPage()});
+ document.getElementById('barberAdd').onclick=()=>openBarberForm();
+ try{
+  const tenant=await getBarberTenant();
+  const [bs,ss,as]=await Promise.all([
+   sb.from('crm_barbers').select('*').eq('tenant_id',tenant).order('created_at',{ascending:false}),
+   sb.from('crm_barber_services').select('*').eq('tenant_id',tenant).order('created_at',{ascending:false}),
+   sb.from('crm_barber_appointments').select('*').eq('tenant_id',tenant).order('starts_at',{ascending:false}).limit(200)
+  ]);
+  for(const r of [bs,ss,as])if(r.error)throw r.error;
+  barberCache={barbers:bs.data||[],services:ss.data||[],appointments:as.data||[]};
+  const today=new Date();today.setHours(0,0,0,0);const next=new Date(today);next.setDate(next.getDate()+1);
+  const todayAp=barberCache.appointments.filter(x=>new Date(x.starts_at)>=today&&new Date(x.starts_at)<next);
+  const income=barberCache.appointments.filter(x=>x.payment_status==='paid').reduce((n,x)=>n+Number(x.price||0),0);
+  document.getElementById('barberStats').innerHTML=[
+   ['Rendez-vous aujourd’hui',todayAp.length],['Barbiers actifs',barberCache.barbers.filter(x=>x.is_active).length],
+   ['Services actifs',barberCache.services.filter(x=>x.is_active).length],['Encaissements enregistrés',income.toFixed(2)+' DH']
+  ].map(([a,b])=>`<div class="stat"><div class="label">${a}</div><div class="value">${b}</div></div>`).join('');
+  drawBarberTab();
+ }catch(e){document.getElementById('barberArea').innerHTML=`<div class="notice error">${esc(e.message)}</div>`}
+}
+function drawBarberTab(){
+ const area=document.getElementById('barberArea');if(!area)return;
+ if(barberTab==='barbers'){
+  area.innerHTML=barberCache.barbers.length?`<div class="table-wrap"><table><thead><tr><th>Nom</th><th>Téléphone</th><th>Spécialité</th><th>Statut</th></tr></thead><tbody>${barberCache.barbers.map(b=>`<tr><td><b>${esc(b.full_name)}</b></td><td>${esc(b.phone||'—')}</td><td>${esc(b.specialty||'—')}</td><td>${b.is_active?'Actif':'Inactif'}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Aucun barbier. Ajoutez votre équipe.</div>';
+ }else if(barberTab==='services'){
+  area.innerHTML=barberCache.services.length?`<div class="table-wrap"><table><thead><tr><th>Service</th><th>Durée</th><th>Prix</th><th>Part barbier fixe</th><th>Part salon</th><th>Statut</th></tr></thead><tbody>${barberCache.services.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${s.duration_minutes} min</td><td>${Number(s.price).toFixed(2)} DH</td><td>${Number(s.barber_fixed_fee).toFixed(2)} DH</td><td>${(Number(s.price)-Number(s.barber_fixed_fee)).toFixed(2)} DH</td><td>${s.is_active?'Actif':'Inactif'}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Aucun service. Ajoutez vos prestations et tarifs.</div>';
+ }else{
+  const barberMap=Object.fromEntries(barberCache.barbers.map(x=>[x.id,x.full_name])),serviceMap=Object.fromEntries(barberCache.services.map(x=>[x.id,x.name]));
+  area.innerHTML=barberCache.appointments.length?`<div class="table-wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Téléphone</th><th>Service</th><th>Barbier</th><th>Total</th><th>Barbier</th><th>Statut</th><th>Paiement</th></tr></thead><tbody>${barberCache.appointments.map(a=>`<tr><td>${new Date(a.starts_at).toLocaleString()}</td><td><b>${esc(a.client_name)}</b></td><td>${esc(a.client_phone)}</td><td>${esc(serviceMap[a.service_id]||'—')}</td><td>${esc(barberMap[a.barber_id]||'—')}</td><td>${Number(a.price).toFixed(2)} DH</td><td>${Number(a.barber_fixed_fee).toFixed(2)} DH</td><td><select data-astatus="${a.id}">${['pending','confirmed','in_progress','completed','cancelled','no_show'].map(v=>`<option value="${v}" ${a.status===v?'selected':''}>${v}</option>`).join('')}</select></td><td><button class="btn ${a.payment_status==='paid'?'secondary':''} small" data-paid="${a.id}">${a.payment_status==='paid'?'Payé au barbier':'Marquer payé'}</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Aucun rendez-vous pour le moment.</div>';
+  area.querySelectorAll('[data-astatus]').forEach(el=>el.onchange=async()=>{const {error}=await sb.from('crm_barber_appointments').update({status:el.value}).eq('id',el.dataset.astatus);if(error)alert(error.message);else renderBarberPage()});
+  area.querySelectorAll('[data-paid]').forEach(el=>el.onclick=async()=>{const {error}=await sb.from('crm_barber_appointments').update({payment_status:'paid',paid_to_barber:true,payment_method:'cash'}).eq('id',el.dataset.paid);if(error)alert(error.message);else renderBarberPage()});
+ }
+}
+async function openBarberForm(){
+ const type=barberTab,tenant=await getBarberTenant();
+ let fields='';
+ if(type==='barbers')fields=`<div class="field"><label>Nom complet</label><input name="full_name" required></div><div class="field"><label>Téléphone</label><input name="phone"></div><div class="field"><label>Spécialité</label><input name="specialty" placeholder="Coupe, barbe…"></div>`;
+ if(type==='services')fields=`<div class="field"><label>Nom du service</label><input name="name" required></div><div class="field"><label>Durée (minutes)</label><input name="duration_minutes" type="number" min="5" max="240" value="30" required></div><div class="field"><label>Prix client (DH)</label><input name="price" type="number" min="0" step=".01" required></div><div class="field"><label>Montant fixe du barbier (DH)</label><input name="barber_fixed_fee" type="number" min="0" step=".01" value="0" required></div><div class="field wide"><label>Description</label><textarea name="description"></textarea></div>`;
+ if(type==='appointments')fields=`<div class="field"><label>Nom du client</label><input name="client_name" required></div><div class="field"><label>Téléphone</label><input name="client_phone" required></div><div class="field"><label>Barbier</label><select name="barber_id" required>${barberCache.barbers.filter(x=>x.is_active).map(x=>`<option value="${x.id}">${esc(x.full_name)}</option>`).join('')}</select></div><div class="field"><label>Service</label><select name="service_id" required>${barberCache.services.filter(x=>x.is_active).map(x=>`<option value="${x.id}">${esc(x.name)} · ${x.price} DH</option>`).join('')}</select></div><div class="field"><label>Date et heure</label><input name="starts_at" type="datetime-local" required></div><div class="field"><label>Notes</label><input name="notes"></div>`;
+ document.getElementById('modalRoot').innerHTML=`<div class="modal-back"><div class="modal"><div class="modal-head"><h2>Ajouter ${type==='barbers'?'un barbier':type==='services'?'un service':'un rendez-vous'}</h2><button class="btn secondary" id="barberClose">✕</button></div><form id="barberForm"><div class="form-grid">${fields}</div><div id="barberFormMsg" class="notice hidden"></div><div class="actions"><button type="button" class="btn secondary" id="barberCancel">Annuler</button><button class="btn">Enregistrer</button></div></form></div></div>`;
+ const close=()=>document.getElementById('modalRoot').innerHTML='';document.getElementById('barberClose').onclick=document.getElementById('barberCancel').onclick=close;
+ document.getElementById('barberForm').onsubmit=async e=>{
+  e.preventDefault();const fd=new FormData(e.target),p=Object.fromEntries(fd.entries());p.tenant_id=tenant;
+  let table=type==='barbers'?'crm_barbers':type==='services'?'crm_barber_services':'crm_barber_appointments';
+  if(type==='services'){p.price=Number(p.price);p.barber_fixed_fee=Number(p.barber_fixed_fee);p.duration_minutes=Number(p.duration_minutes);if(p.barber_fixed_fee>p.price){alert('La part fixe du barbier ne peut pas dépasser le prix.');return}}
+  if(type==='appointments'){
+   const service=barberCache.services.find(x=>x.id===p.service_id);const barber=barberCache.barbers.find(x=>x.id===p.barber_id);
+   if(!service||!barber){alert('Ajoutez d’abord un barbier et un service.');return}
+   const start=new Date(p.starts_at);const end=new Date(start.getTime()+Number(service.duration_minutes)*60000);
+   p.starts_at=start.toISOString();p.ends_at=end.toISOString();p.price=Number(service.price);p.barber_fixed_fee=Number(service.barber_fixed_fee);
+   const collision=barberCache.appointments.some(a=>a.barber_id===p.barber_id&&!['cancelled','no_show'].includes(a.status)&&new Date(a.starts_at)<end&&new Date(a.ends_at)>start);
+   if(collision){alert('Ce barbier a déjà un rendez-vous pendant cette période.');return}
+  }
+  const {error}=await sb.from(table).insert(p);if(error){const m=document.getElementById('barberFormMsg');msg(m,error.message,true);return}
+  close();await renderBarberPage();
+ };
+}
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function statusPill(v){const good=['won','done','customer'];const warn=['in_progress','proposal','negotiation','prospect'];return `<span class="pill ${good.includes(v)?'good':warn.includes(v)?'warn':''}">${tr(v||'—')}</span>`}
+function drawTable(key,rows){const cfg=tables[key],area=document.getElementById('tableArea');if(!rows.length){area.innerHTML=`<div class="empty">${tr('noData')}</div>`;return}
+ const columns=key==='contacts'?[['first_name','firstName'],['last_name','lastName'],['email','email'],['phone','phone'],['status','status']]:key==='companies'?[['name','name'],['industry','industry'],['phone','phone'],['city','city']]:key==='deals'?[['title','title'],['amount','amount'],['stage','stage'],['expected_close_date','expectedClose']]:key==='tasks'?[['title','title'],['status','status'],['priority','priority'],['due_at','due']]:[['body','body'],['created_at','due']];
+ area.innerHTML=`<table><thead><tr>${columns.map(x=>`<th>${tr(x[1])}</th>`).join('')}<th>${tr('actions')}</th></tr></thead><tbody>${rows.map(r=>`<tr>${columns.map(([f])=>`<td>${['status','stage','priority'].includes(f)?statusPill(r[f]):esc(f==='amount'&&r[f]!=null?`${r[f]} MAD`:r[f]||'—')}</td>`).join('')}<td><button class="btn secondary small" data-edit="${r.id}">${tr('edit')}</button> <button class="btn danger small" data-del="${r.id}">${tr('delete')}</button></td></tr>`).join('')}</tbody></table>`;
+ area.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openForm(key,rows.find(x=>x.id===b.dataset.edit)));area.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeRow(key,b.dataset.del));
+}
+async function openForm(key,row=null){const cfg=tables[key];let html=`<div class="modal-back"><div class="modal"><div class="modal-head"><h2>${row?tr('edit'):tr('add')} · ${tr(cfg.title)}</h2><button class="btn secondary" id="closeModal">✕</button></div><form id="recordForm"><div class="form-grid">`;
+ for(const [field,label,type='text',opts] of cfg.fields){let value=row?.[field]??(field==='currency'?'MAD':'');html+=`<div class="field ${type==='textarea'?'wide':''}"><label>${tr(label)}</label>`;
+ if(type==='textarea')html+=`<textarea name="${field}" rows="3">${esc(value)}</textarea>`;
+ else if(type==='select'&&Array.isArray(opts)){html+=`<select name="${field}"><option value="">—</option>${opts.map(o=>`<option value="${o}" ${value===o?'selected':''}>${tr(o)}</option>`).join('')}</select>`}
+ else if(type==='select'&&typeof opts==='string'){let related=opts==='crm_companies'?'companies':opts==='crm_contacts'?'contacts':'deals';let list=cache[related]||await getRows(related);html+=`<select name="${field}"><option value="">—</option>${list.map(o=>`<option value="${o.id}" ${value===o.id?'selected':''}>${esc(o.name||`${o.first_name||''} ${o.last_name||''}`||o.title)}</option>`).join('')}</select>`}
+ else html+=`<input name="${field}" type="${type}" value="${esc(value)}">`;
+ html+='</div>'}
+ html+=`</div><div id="formMsg" class="notice hidden"></div><div class="actions"><button type="button" class="btn secondary" id="cancelForm">${tr('cancel')}</button><button class="btn">${tr('save')}</button></div></form></div></div>`;
+ document.getElementById('modalRoot').innerHTML=html;document.getElementById('closeModal').onclick=document.getElementById('cancelForm').onclick=()=>document.getElementById('modalRoot').innerHTML='';
+ document.getElementById('recordForm').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target),payload={};for(const [k,v] of fd.entries())payload[k]=v===''?null:v;
+ if(key==='companies')payload.owner_id=profile.id;if(key==='contacts')payload.owner_id=profile.id;if(key==='deals')payload.owner_id=profile.id;if(key==='tasks'){payload.created_by=profile.id;if(!row)payload.assigned_to=profile.id}
+ if(key==='notes')payload.created_by=profile.id;
+ if(key==='deals'&&payload.amount)payload.amount=Number(payload.amount);
+ const res=row?await sb.from(cfg.table).update(payload).eq('id',row.id):await sb.from(cfg.table).insert(payload);
+ if(res.error){msg(document.getElementById('formMsg'),res.error.message,true);return}document.getElementById('modalRoot').innerHTML='';await renderPage();
+ };
+}
+async function removeRow(key,id){if(!confirm(tr('confirmDelete')))return;const {error}=await sb.from(tables[key].table).delete().eq('id',id);if(error){alert(error.message);return}await renderPage()}
+</script>
+</body></html>
