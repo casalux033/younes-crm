@@ -82,16 +82,34 @@ document.getElementById('loginLang').onclick=()=>setLang(lang==='fr'?'ar':'fr');
 document.getElementById('langToggle').onclick=()=>setLang(lang==='fr'?'ar':'fr');
 function msg(el,text,isErr=false){el.textContent=text;el.classList.remove('hidden','error');if(isErr)el.classList.add('error')}
 document.getElementById('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();const u=document.getElementById('username').value.trim().toLowerCase(),p=document.getElementById('password').value;const box=document.getElementById('loginMsg');box.classList.add('hidden');
+ e.preventDefault();
+ const u=document.getElementById('username').value.trim().toLowerCase();
+ const p=document.getElementById('password').value;
+ const box=document.getElementById('loginMsg');
+ const submit=e.currentTarget.querySelector('button[type="submit"],button:not([type])');
+ box.classList.add('hidden');
  if(!u||!p)return;
-const loginEmail=u.includes('@')?u:`${u}@younes-crm.internal`;const {data,error}=await sb.auth.signInWithPassword({email:loginEmail,password:p});
- if(error){msg(box,tr('loginError'),true);return}
- const {data:pr,error:pe}=await sb.from('crm_profiles').select('*').eq('id',data.user.id).maybeSingle();
- if(pe||!pr||!pr.is_active){await sb.auth.signOut();msg(box,pr?tr('loginError'):tr('profileMissing'),true);return}
- profile=pr;document.getElementById('sideUser').textContent=pr.display_name||pr.username;document.getElementById('avatar').textContent=(pr.display_name||pr.username||'Y').slice(0,1).toUpperCase();
- document.getElementById('societiesNav').classList.toggle('hidden',pr.role!=='admin');
- document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
- if(pr.must_change_password){passwordModal();return}await renderPage();
+ if(submit){submit.disabled=true;submit.textContent='Connexion...';}
+ try{
+  const loginEmail=u.includes('@')?u:`${u}@younes-crm.internal`;
+  const {data,error}=await sb.auth.signInWithPassword({email:loginEmail,password:p});
+  if(error)throw new Error('Connexion refusée : vérifiez l’identifiant et le mot de passe.');
+  const {data:pr,error:pe}=await sb.from('crm_profiles').select('*').eq('id',data.user.id).maybeSingle();
+  if(pe)throw new Error('Compte connecté, mais lecture du profil impossible : '+pe.message);
+  if(!pr||!pr.is_active){await sb.auth.signOut();throw new Error('Profil CRM introuvable ou désactivé.');}
+  profile=pr;
+  document.getElementById('sideUser').textContent=pr.display_name||pr.username;
+  document.getElementById('avatar').textContent=(pr.display_name||pr.username||'Y').slice(0,1).toUpperCase();
+  document.getElementById('societiesNav').classList.toggle('hidden',pr.role!=='admin');
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  if(pr.must_change_password){passwordModal();return;}
+  await renderPage();
+ }catch(err){
+  msg(box,err?.message||'Une erreur est survenue pendant la connexion.',true);
+ }finally{
+  if(submit){submit.disabled=false;submit.textContent=tr('signIn');}
+ }
 });
 document.getElementById('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};
 document.getElementById('nav').addEventListener('click',e=>{const b=e.target.closest('button[data-page]');if(!b)return;currentPage=b.dataset.page;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));renderPage()});
