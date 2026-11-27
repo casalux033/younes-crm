@@ -323,7 +323,7 @@ async function renderSocietiesPage(){
     </tr></thead>
     <tbody>
      ${data.map(x=>{
-      const url=/^https?:\\/\\//i.test(x.website||'')?x.website:null;
+      const url=/^https?:\/\//i.test(x.website||'')?x.website:null;
       return `<tr>
        <td><b>${esc(x.name)}</b></td>
        <td>${esc(x.slug)}</td>
