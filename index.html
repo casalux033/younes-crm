@@ -83,7 +83,7 @@ function msg(el,text,isErr=false){el.textContent=text;el.classList.remove('hidde
 document.getElementById('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();const u=document.getElementById('username').value.trim().toLowerCase(),p=document.getElementById('password').value;const box=document.getElementById('loginMsg');box.classList.add('hidden');
  if(!u||!p)return;
- const {data,error}=await sb.auth.signInWithPassword({email:`${u}@younes-crm.internal`,password:p});
+const loginEmail=u.includes('@')?u:`${u}@younes-crm.internal`;const {data,error}=await sb.auth.signInWithPassword({email:loginEmail,password:p});
  if(error){msg(box,tr('loginError'),true);return}
  const {data:pr,error:pe}=await sb.from('crm_profiles').select('*').eq('id',data.user.id).maybeSingle();
  if(pe||!pr||!pr.is_active){await sb.auth.signOut();msg(box,pr?tr('loginError'):tr('profileMissing'),true);return}
