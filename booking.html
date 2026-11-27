@@ -34,7 +34,7 @@ let services=[],barbers=[];
 function show(text,error=false){msg.hidden=false;msg.textContent=text;msg.className='notice'+(error?' error':'')}
 async function init(){
  const [s,b]=await Promise.all([
-  db.from('crm_barber_services').select('id,name,duration_minutes,price').eq('tenant_id',TENANT).eq('is_active',true).order('name'),
+  db.from('crm_barber_services').select('id,name,duration_minutes,price,barber_fixed_fee').eq('tenant_id',TENANT).eq('is_active',true).order('name'),
   db.from('crm_barbers').select('id,full_name').eq('tenant_id',TENANT).eq('is_active',true).order('full_name')
  ]);
  if(s.error||b.error){show('Impossible de charger les disponibilités. Réessayez plus tard.',true);return}
@@ -53,7 +53,7 @@ form.onsubmit=async e=>{
  const {error}=await db.from('crm_barber_appointments').insert({
   tenant_id:TENANT,client_name:String(f.get('client_name')).trim(),client_phone:String(f.get('client_phone')).trim(),
   barber_id:f.get('barber_id'),service_id:service.id,starts_at:start.toISOString(),ends_at:end.toISOString(),
-  status:'pending',price:service.price,barber_fixed_fee:0,payment_status:'unpaid',paid_to_barber:false,
+  status:'pending',price:service.price,barber_fixed_fee:service.barber_fixed_fee,payment_status:'unpaid',paid_to_barber:false,
   notes:String(f.get('notes')||'').trim()||null
  });
  if(error){show(error.message.includes('no longer available')?'Ce créneau vient d’être réservé. Choisissez une autre heure.':'La demande n’a pas pu être envoyée. Vérifiez les informations et réessayez.',true);return}
