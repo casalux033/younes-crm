@@ -256,7 +256,7 @@ async function openBarberForm(){
    const start=new Date(p.starts_at),duration=selected.reduce((n,x)=>n+Number(x.duration_minutes||0),0),end=new Date(start.getTime()+duration*60000);
    const totalPrice=selected.reduce((n,x)=>n+Number(x.price||0),0),totalBarber=selected.reduce((n,x)=>n+Number(x.barber_fixed_fee||0),0);
    const serviceNames=selected.map(x=>x.name).join(' + '),userNotes=p.notes||'';
-   p.service_id=selected[0].id;p.starts_at=start.toISOString();p.ends_at=end.toISOString();p.price=totalPrice;p.barber_fixed_fee=totalBarber;p.salon_share=totalPrice-totalBarber;p.notes='Services: '+serviceNames+(userNotes?'\\n'+userNotes:'');
+   p.service_id=selected[0].id;p.service_ids=selected.map(x=>x.id);p.starts_at=start.toISOString();p.ends_at=end.toISOString();p.price=totalPrice;p.barber_fixed_fee=totalBarber;p.salon_share=totalPrice-totalBarber;p.notes='Services: '+serviceNames+(userNotes?'\\n'+userNotes:'');
    const collision=barberCache.appointments.some(a=>a.barber_id===p.barber_id&&!['cancelled','no_show'].includes(a.status)&&new Date(a.starts_at)<end&&new Date(a.ends_at)>start);
    if(collision){alert('Ce barbier a déjà un rendez-vous pendant cette période.');return}
   }
