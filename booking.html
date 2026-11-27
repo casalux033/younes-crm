@@ -43,7 +43,9 @@ const KEY='sb_publishable_rRuLAXqxjOvrbLrkqws74A_2RtFBvBR';
 const TENANT='dce598d7-8b3c-448c-887c-74b54069025c';
 const db=createClient(URL,KEY);
 const form=document.getElementById('bookingForm'),msg=document.getElementById('msg');
-const date=document.getElementById('date');date.min=new Date().toISOString().slice(0,10);
+const date=document.getElementById('date');
+const localToday=new Date();
+date.min=[localToday.getFullYear(),String(localToday.getMonth()+1).padStart(2,'0'),String(localToday.getDate()).padStart(2,'0')].join('-');
 let services=[],barbers=[];
 function show(text,error=false){msg.hidden=false;msg.textContent=text;msg.className='notice'+(error?' error':'')}
 function updateServiceTotal(){
@@ -80,7 +82,7 @@ form.onsubmit=async e=>{
  const appointmentNotes='Services: '+serviceNames+(userNotes?'\\n'+userNotes:'');
  const {error}=await db.from('crm_barber_appointments').insert({
   tenant_id:TENANT,client_name:String(f.get('client_name')).trim(),client_phone:String(f.get('client_phone')).trim(),
-  barber_id:f.get('barber_id'),service_id:selected[0].id,starts_at:start.toISOString(),ends_at:end.toISOString(),
+  barber_id:f.get('barber_id'),service_id:selected[0].id,service_ids:selected.map(x=>x.id),starts_at:start.toISOString(),ends_at:end.toISOString(),
   status:'pending',price:totalPrice,barber_fixed_fee:totalBarber,salon_share:totalPrice-totalBarber,payment_status:'unpaid',paid_to_barber:false,
   notes:appointmentNotes
  });
